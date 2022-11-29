@@ -1,101 +1,71 @@
-'use strict';
+"use strict";
 
-// document.querySelector('.message').textContent=
-// 'Betta start guessing boy!!😈';
-// console.log(document.querySelector('.message').textContent);
-// document.querySelector('.number').textContent=13;
-// document.querySelector('.score').textContent=10;
-// document.querySelector('.guess').value=23;
-// console.log(document.querySelector('.guess').value);
-const random=function(){
-   const randomNumber= Math.trunc(Math.random()*30)+1;
-   return randomNumber;
-}  ;
-let fixScore=30;
-let max=1;
-const tooManyTries=function(){
-    document.querySelector('.score').textContent=`☠️ You lost the game :PP`;
+const random = function () {
+  const randomNumber = Math.trunc(Math.random() * 30) + 1;
+  return randomNumber;
 };
 
-let number=random();
-const checkNumber=function(){
-    
-    console.log(number);
-    console.log(document.querySelector('.guess').value);
-    const guess=Number (document.querySelector('.guess').value);
-    if(!guess){
-        document.querySelector('.message').textContent=
-        '⛔No number bici';
-
-    }
-    else if( guess === number)
-    {
-        document.querySelector('.message').textContent=
-        `🥳Congrats the number is indeed ${number}`;
-        document.querySelector('.score').textContent=fixScore;
-      let highScore=function(score){
-        if(score>max)
-        max=score;
-        return max;
-      };
-      document.querySelector('.highscore').textContent=
-       highScore(Number(document.querySelector('.score').textContent));
-       document.querySelector('body').style.backgroundColor='#60b347';
-       document.querySelector('.number').textContent=number;
-       document.querySelector('.number').style.width='30rem';
-       
-      return;
-        
-    }
-    else if( guess>number)
-    {
-        if(fixScore>1){
-            document.querySelector('.message').textContent=
-            `📈TO HIGH MAN `;
-          fixScore--;
-          document.querySelector('.score').textContent=fixScore;
-        }
-        else 
-            tooManyTries();
-
-    }
-    else if( guess<number)
-    {
-        if(fixScore>1){
-            document.querySelector('.message').textContent=
-            `📉LOW LOW LOW `;
-            fixScore--;
-            document.querySelector('.score').textContent=fixScore;
-
-        }
-        else 
-             tooManyTries();
-      
-
-    }
-
+let fixScore = 30;
+let max = 1;
+const tooManyTries = function () {
+  document.querySelector(".score").textContent = `☠️ You lost the game :PP`;
 };
-document.querySelector('.check').addEventListener
-('click',checkNumber);
-
-
-
-const againButton=function(){
-   
-     number=random();
-    fixScore=30;
-    document.querySelector('.score').textContent=30;
-    document.querySelector('.message').textContent='Start guessing...';
-    document.querySelector('.number').style.width='15rem';
-    document.querySelector('.number').textContent='?';
-    document.querySelector('body').style.backgroundColor='#222';
-    document.querySelector('.guess').value='';
-    
-    
-    
-
+const displayMessage = function (message) {
+  document.querySelector(".message").textContent = message;
+};
+const displayScore = function (score) {
+  document.querySelector(".score").textContent = score;
+};
+const setBackgroundColor = function (color) {
+  document.querySelector("body").style.backgroundColor = color;
 };
 
-document.querySelector('.again').addEventListener
-('click',againButton);
+const displayNumber = function (number, width) {
+  document.querySelector(".number").textContent = number;
+  document.querySelector(".number").style.width = width;
+};
 
+let number = random();
+const checkNumber = function () {
+  console.log(number);
+  console.log(document.querySelector(".guess").value);
+  const guess = Number(document.querySelector(".guess").value);
+  if (!guess) {
+    displayMessage("⛔No number bici");
+  } else if (guess === number) {
+    displayMessage(`🥳Congrats the number is indeed ${number}`);
+    displayScore(fixScore);
+
+    if (fixScore > max) {
+      max = fixScore;
+      document.querySelector(".highscore").textContent = max;
+    }
+
+    setBackgroundColor("#60b347");
+    displayNumber(number, "30rem");
+
+    return;
+  } else if (guess !== number) {
+    displayMessage(number < guess ? `📈TO HIGH MAN ` : `📉LOW LOW LOW`);
+
+    fixScore--;
+    displayScore(fixScore);
+    if (!fixScore) {
+      tooManyTries();
+      displayNumber(0);
+    }
+  }
+};
+document.querySelector(".check").addEventListener("click", checkNumber);
+
+const againButton = function () {
+  number = random();
+  fixScore = 30;
+  displayScore(30);
+  displayMessage("Start guessing...");
+  displayNumber("?", "15rem");
+  setBackgroundColor("#222");
+  document.querySelector(".guess").value = "";
+};
+
+document.querySelector(".again").addEventListener("click", againButton);
